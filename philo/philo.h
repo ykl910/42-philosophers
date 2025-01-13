@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/13 18:34:44 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/13 23:13:19 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_philo
 	pthread_t	thread_id; 
 	t_fork		first_fork;
 	t_fork		sec_fork;
-	int			nb_meals_eaten;
+	int			nb_meals_eat;
 	int 		last_eat_time;
 	int			status;
 }	t_philo;
@@ -44,6 +44,8 @@ typedef struct s_monitor
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		nb_limit_meals;
+	t_fork	*fork;
+	t_philo	*philo;
 }	t_monitor;
 
 #endif
