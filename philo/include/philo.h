@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/13 23:13:19 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/14 17:18:25 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+typedef struct s_data t_data;
+
 typedef struct s_fork
 {
 	pthread_mutex_t	mutex_id;
@@ -32,20 +34,35 @@ typedef struct s_philo
 	pthread_t	thread_id; 
 	t_fork		first_fork;
 	t_fork		sec_fork;
-	int			nb_meals_eat;
+	int			philo_id;
+	int			nb_meals_eaten;
 	int 		last_eat_time;
 	int			status;
+	t_data		*data;
 }	t_philo;
 
-typedef struct s_monitor
+typedef struct s_data
 {
-	int		nb_philo;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		nb_limit_meals;
+	long	nb_philo;
+	long	time_to_die;
+	long	time_to_eat;
+	long	time_to_sleep;
+	long	nb_limit_meals;
+	long	start_time;
 	t_fork	*fork;
 	t_philo	*philo;
-}	t_monitor;
+}	t_data;
+
+// initiate data
+t_philo	*init_philo(t_data *data);
+t_fork	*init_fork(t_data *data);
+void	init_data(t_data *data, int ac, char **av);
+long	ft_atol(const char *str);
+
+// initiate the threads
+int		create_threads(t_data *data);
+long	get_current_time(void);
+void	*dinner_routine(void *arg);
+void	*monitor_routine(void *arg);
 
 #endif
