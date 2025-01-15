@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/14 17:18:25 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/15 16:26:43 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,18 @@ typedef struct s_fork
 {
 	pthread_mutex_t	mutex_id;
 	int				fork_id;
-	int				status;
+	//int				status;
 }	t_fork;
 
 typedef struct s_philo
 {
 	pthread_t	thread_id; 
-	t_fork		first_fork;
-	t_fork		sec_fork;
+	t_fork		*first_fork;
+	t_fork		*sec_fork;
 	int			philo_id;
-	int			nb_meals_eaten;
-	int 		last_eat_time;
-	int			status;
+	long		nb_meals_eaten;
+	long 		last_eat_time;
+	long		status;
 	t_data		*data;
 }	t_philo;
 
@@ -49,6 +49,9 @@ typedef struct s_data
 	long	time_to_sleep;
 	long	nb_limit_meals;
 	long	start_time;
+	pthread_mutex_t	sim_mutex;
+	int		simulation_running;
+	long	nb_philo_full;
 	t_fork	*fork;
 	t_philo	*philo;
 }	t_data;
@@ -60,7 +63,7 @@ void	init_data(t_data *data, int ac, char **av);
 long	ft_atol(const char *str);
 
 // initiate the threads
-int		create_threads(t_data *data);
+long	create_threads(t_data *data);
 long	get_current_time(void);
 void	*dinner_routine(void *arg);
 void	*monitor_routine(void *arg);

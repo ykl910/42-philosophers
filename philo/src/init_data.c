@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/14 17:09:38 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/15 16:55:23 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,9 @@ void	init_data(t_data *data, int ac, char **av)
 		data->start_time = get_current_time();
 		data->fork = init_fork(data);
 		data->philo = init_philo(data);
+		data->simulation_running = 1;
+		data->nb_philo_full = 0;
+		pthread_mutex_init(&data->sim_mutex, NULL);
 	}
 }
 
@@ -33,7 +36,7 @@ t_philo	*init_philo(t_data *data)
 	t_philo	*philo;
 	int		i;
 
-	philo = malloc(sizeof(t_philo) * (data->nb_philo + 1));
+	philo = malloc(sizeof(t_philo) * (data->nb_philo));
 	if (!philo)
 		return (NULL);
 	i = 0;
@@ -41,18 +44,18 @@ t_philo	*init_philo(t_data *data)
 	{
 		philo[i].philo_id = i + 1;
 		philo[i].nb_meals_eaten = 0;
-		philo[i].last_eat_time = 0;
-		philo[i].status = 0;
+		philo[i].last_eat_time = get_current_time();
 		philo[i].data = data;
+		philo[i].status = 0;
 		if (i % 2 == 0)
 		{
-			philo[i].first_fork = data->fork[i];
-			philo[i].sec_fork = data->fork[(i + 1) % data->nb_philo];
+			philo[i].first_fork = &data->fork[i];
+			philo[i].sec_fork = &data->fork[(i + 1) % data->nb_philo];
 		}
 		else
 		{
-			philo[i].first_fork = data->fork[(i + 1) % data->nb_philo];
-			philo[i].sec_fork = data->fork[i];
+			philo[i].first_fork = &data->fork[(i + 1) % data->nb_philo];
+			philo[i].sec_fork = &data->fork[i];
 		}
 		i++;
 	}
@@ -71,7 +74,6 @@ t_fork	*init_fork(t_data *data)
 	while (i < data->nb_philo)
 	{
 		fork[i].fork_id = i;
-		fork[i].status = 0;
 		if (pthread_mutex_init(&fork[i].mutex_id, NULL) != 0)
 			return (NULL);
 		i++;
