@@ -6,29 +6,59 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/15 16:55:23 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/16 15:38:11 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_data(t_data *data, int ac, char **av)
-{	
+long	check_input(int ac, char **av)
+{
 	if (ac == 5 || ac == 6)
 	{
-		data->nb_philo = ft_atol(av[1]);
-		data->time_to_die = ft_atol(av[2]);
-		data->time_to_eat = ft_atol(av[3]);
-		data->time_to_sleep = ft_atol(av[4]);
-		if (ac == 6)
-			data->nb_limit_meals = ft_atol(av[5]);
-		data->start_time = get_current_time();
-		data->fork = init_fork(data);
-		data->philo = init_philo(data);
-		data->simulation_running = 1;
-		data->nb_philo_full = 0;
-		pthread_mutex_init(&data->sim_mutex, NULL);
+		if ((ac == 6 && ft_atol(av[5]) <= 0))
+		{
+			printf("wrong input");
+			return (1);
+		}
+		if (ft_atol(av[1]) <= 0 || ft_atol(av[1]) > 200 || ft_atol(av[2]) < 60 \
+		|| ft_atol(av[3]) < 60 || ft_atol(av[4]) < 60)
+		{
+			printf("wrong input");
+			return (1);
+		}
+		if (ft_atol(av[1]) == 1)
+		{
+			printf("0 1 has taken a fork\n");
+			usleep(ft_atol(av[1]) * 1000);
+			printf("%ld 1 has died\n", ft_atol(av[2]));
+			return (1);
+		}
 	}
+	return (0);
+}
+
+long	init_data(t_data *data, int ac, char **av)
+{
+	if (check_input(ac, av))
+		return (1);
+	data->nb_philo = ft_atol(av[1]);
+	data->time_to_die = ft_atol(av[2]);
+	data->time_to_eat = ft_atol(av[3]);
+	data->time_to_sleep = ft_atol(av[4]);
+	if (ac == 6)
+		data->nb_limit_meals = ft_atol(av[5]);
+	data->start_time = get_current_time();
+	data->fork = init_fork(data);
+	data->philo = init_philo(data);
+	data->simulation_running = 1;
+	data->all_threads_ready = 0;
+	data->nb_philo_full = 0;
+	if (pthread_mutex_init(&data->ready_mutex, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&data->sim_mutex, NULL) != 0)
+		return (1);
+	return (0);
 }
 
 t_philo	*init_philo(t_data *data)
@@ -39,8 +69,8 @@ t_philo	*init_philo(t_data *data)
 	philo = malloc(sizeof(t_philo) * (data->nb_philo));
 	if (!philo)
 		return (NULL);
-	i = 0;
-	while (i < data->nb_philo)
+	i = -1;
+	while (++i < data->nb_philo)
 	{
 		philo[i].philo_id = i + 1;
 		philo[i].nb_meals_eaten = 0;
@@ -57,7 +87,6 @@ t_philo	*init_philo(t_data *data)
 			philo[i].first_fork = &data->fork[(i + 1) % data->nb_philo];
 			philo[i].sec_fork = &data->fork[i];
 		}
-		i++;
 	}
 	return (philo);
 }
@@ -70,13 +99,12 @@ t_fork	*init_fork(t_data *data)
 	fork = malloc(sizeof(t_fork) * data->nb_philo);
 	if (!fork)
 		return (NULL);
-	i = 0;
-	while (i < data->nb_philo)
+	i = -1;
+	while (++i < data->nb_philo)
 	{
 		fork[i].fork_id = i;
 		if (pthread_mutex_init(&fork[i].mutex_id, NULL) != 0)
 			return (NULL);
-		i++;
 	}
 	return (fork);
 }

@@ -6,7 +6,7 @@
 #    By: kyang <kyang@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 11:25:43 by kyang             #+#    #+#              #
-#    Updated: 2025/01/14 17:09:14 by kyang            ###   ########.fr        #
+#    Updated: 2025/01/16 13:15:09 by kyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ CC = cc
 SRC_PATH = src/
 SRC		=	utils.c \
 			init_data.c \
-			thread_routines.c \
+			dinner_thread.c \
+			monitor_thread.c \
 			main.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
