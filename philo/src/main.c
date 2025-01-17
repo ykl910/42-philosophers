@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/16 15:37:36 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/17 17:40:27 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int	main(int ac, char **av)
 		i++;
 	}
 	pthread_mutex_destroy(&data.sim_mutex);
+	pthread_mutex_destroy(&data.ready_mutex);
+	pthread_mutex_destroy(&data.print);
 	free(data.fork);
 	free(data.philo);
 	return (0);

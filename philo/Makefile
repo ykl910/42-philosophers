@@ -6,7 +6,7 @@
 #    By: kyang <kyang@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 11:25:43 by kyang             #+#    #+#              #
-#    Updated: 2025/01/16 13:15:09 by kyang            ###   ########.fr        #
+#    Updated: 2025/01/17 17:24:36 by kyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,12 @@ SRC		=	utils.c \
 			init_data.c \
 			dinner_thread.c \
 			monitor_thread.c \
+			getters_setters.c \
 			main.c
 
 SRCS	= $(addprefix $(SRC_PATH), $(SRC))
 
-CFLAGS = -Wall -Wextra #-Werror 
+CFLAGS = -Wall -Wextra -Werror 
 
 OBJS = $(SRCS:.c=.o)
 

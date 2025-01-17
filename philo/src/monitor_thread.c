@@ -6,21 +6,11 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:14:29 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/16 16:26:29 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/17 16:51:31 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-long	death_check(t_philo *philo)
-{
-	long	simulation_running;
-
-	pthread_mutex_lock(&philo->data->sim_mutex);
-	simulation_running = philo->data->simulation_running;
-	pthread_mutex_unlock(&philo->data->sim_mutex);
-	return (simulation_running);
-}
 
 long	monitor_death(t_data *data)
 {
@@ -36,10 +26,9 @@ long	monitor_death(t_data *data)
 		long_getter(&data->sim_mutex, &data->start_time) && \
 		long_getter(&data->sim_mutex, &data->philo[i].nb_meals_eaten) == 0))
 		{
-			printf("%ld %d died\n", get_current_time() - \
-			long_getter(&data->sim_mutex, &data->start_time), \
-			data->philo[i].philo_id);
+			safe_print(&data->philo[i], "died");
 			long_setter(&data->sim_mutex, &data->simulation_running, 0);
+			usleep(100);
 			return (1);
 		}
 		pthread_mutex_unlock(&data->sim_mutex);
@@ -69,8 +58,8 @@ long	monitor_full(t_data *data)
 		}
 		if (data->nb_philo_full >= data->nb_philo)
 		{
-			printf("simulation ended, everyone is full\n");
 			long_setter(&data->sim_mutex, &data->simulation_running, 0);
+			usleep(100);
 			return (1);
 		}
 	}
@@ -88,7 +77,6 @@ void	*monitor_routine(void *arg)
 			return (NULL);
 		if (monitor_full(data))
 			return (NULL);
-		usleep(1000);
 	}
 	return (NULL);
 }

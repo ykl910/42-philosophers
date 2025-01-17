@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/16 16:11:21 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/17 17:02:35 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,26 +50,27 @@ long	get_current_time(void)
 	return (milliseconds);
 }
 
-void	long_setter(pthread_mutex_t *mutex, long *dest, long value)
+void	safe_print(t_philo *philo, char *string)
 {
-	pthread_mutex_lock(mutex);
-	*dest = value;
-	pthread_mutex_unlock(mutex);
+	pthread_mutex_lock(&(philo->data->print));
+	if ((philo->data->simulation_running))
+	{
+		printf("%ld %i %s\n", get_current_time() - \
+		philo->data->start_time, philo->philo_id, string);
+	}
+	pthread_mutex_unlock(&(philo->data->print));
+	return ;
 }
 
-long	long_getter(pthread_mutex_t *mutex, long *src)
+void	safe_sleep(long time, t_data *data)
 {
-	long	val;
+	long i;
 
-	pthread_mutex_lock(mutex);
-	val = *src;
-	pthread_mutex_unlock(mutex);
-	return (val);
-}
-
-void	long_incrementer(pthread_mutex_t *mutex, long *dest)
-{
-	pthread_mutex_lock(mutex);
-	(*dest)++;
-	pthread_mutex_unlock(mutex);
+	i = get_current_time();
+	while ((data->simulation_running))
+	{
+		if ((get_current_time() - i) >= time)
+			break ;
+		usleep(50);
+	}
 }
