@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/16 15:38:11 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/18 19:50:50 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ long	init_data(t_data *data, int ac, char **av)
 	if (pthread_mutex_init(&data->ready_mutex, NULL) != 0)
 		return (1);
 	if (pthread_mutex_init(&data->sim_mutex, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
 		return (1);
 	return (0);
 }

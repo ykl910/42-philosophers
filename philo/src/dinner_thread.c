@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:07:47 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/17 17:19:53 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/18 20:00:47 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,11 @@ void	wait_all_threads(t_philo *philo)
 {
 	while (1)
 	{
-		pthread_mutex_lock(&philo->data->ready_mutex);
-		if (philo->data->all_threads_ready)
+		if (long_getter(&philo->data->ready_mutex, \
+		&philo->data->all_threads_ready))
 		{
-			pthread_mutex_unlock(&philo->data->ready_mutex);
 			break ;
 		}
-		pthread_mutex_unlock(&philo->data->ready_mutex);
 	}
 }
 
@@ -38,6 +36,8 @@ long	death_check(t_philo *philo)
 
 long	eat(t_philo *philo)
 {
+	if (!death_check(philo))
+		return (0);
 	pthread_mutex_lock(&philo->first_fork->mutex_id);
 	safe_print(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->sec_fork->mutex_id);

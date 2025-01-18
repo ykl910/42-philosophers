@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/17 16:40:43 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/18 19:50:58 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_data
 	long			simulation_running;
 	long			nb_philo_full;
 	pthread_mutex_t	ready_mutex;
-	pthread_mutex_t	print;
+	pthread_mutex_t	print_mutex;
 	long			all_threads_ready;
 	t_fork			*fork;
 	t_philo			*philo;

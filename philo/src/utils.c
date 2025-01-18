@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/17 17:02:35 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/18 20:01:39 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,19 @@ long	get_current_time(void)
 
 void	safe_print(t_philo *philo, char *string)
 {
-	pthread_mutex_lock(&(philo->data->print));
-	if ((philo->data->simulation_running))
+	pthread_mutex_lock(&(philo->data->print_mutex));
+	if (long_getter(&philo->data->sim_mutex, &philo->data->simulation_running))
 	{
 		printf("%ld %i %s\n", get_current_time() - \
 		philo->data->start_time, philo->philo_id, string);
 	}
-	pthread_mutex_unlock(&(philo->data->print));
+	pthread_mutex_unlock(&(philo->data->print_mutex));
 	return ;
 }
 
 void	safe_sleep(long time, t_data *data)
 {
-	long i;
+	long	i;
 
 	i = get_current_time();
 	while ((data->simulation_running))

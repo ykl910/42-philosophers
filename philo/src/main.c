@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/17 17:40:27 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/18 19:51:44 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	main(int ac, char **av)
 	i = 0;
 	if (create_threads(&data))
 		return (1);
-	pthread_create(&monitor, NULL, monitor_routine, &data);
+	if (pthread_create(&monitor, NULL, monitor_routine, &data) != 0)
+		return (1);
 	pthread_join(monitor, NULL);
 	while (i < data.nb_philo)
 	{
@@ -57,7 +58,7 @@ int	main(int ac, char **av)
 	}
 	pthread_mutex_destroy(&data.sim_mutex);
 	pthread_mutex_destroy(&data.ready_mutex);
-	pthread_mutex_destroy(&data.print);
+	pthread_mutex_destroy(&data.print_mutex);
 	free(data.fork);
 	free(data.philo);
 	return (0);

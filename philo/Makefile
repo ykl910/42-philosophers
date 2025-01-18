@@ -6,7 +6,7 @@
 #    By: kyang <kyang@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 11:25:43 by kyang             #+#    #+#              #
-#    Updated: 2025/01/17 17:24:36 by kyang            ###   ########.fr        #
+#    Updated: 2025/01/18 19:31:32 by kyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
+# clang -fsanitize=address -g $(OBJS) -o $(NAME)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	
 %.o: %.c
