@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/20 12:09:43 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 15:54:52 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ long	check_input(int ac, char **av)
 	{
 		if ((ac == 6 && ft_atol(av[5]) <= 0))
 		{
-			printf("wrong input");
+			printf("wrong input\n");
 			return (1);
 		}
 		if (ft_atol(av[1]) <= 0 || ft_atol(av[1]) > 200 || ft_atol(av[2]) < 60 \
 		|| ft_atol(av[3]) < 60 || ft_atol(av[4]) < 60)
 		{
-			printf("wrong input");
+			printf("wrong input\n");
 			return (1);
 		}
 		if (ft_atol(av[1]) == 1)
@@ -34,8 +34,10 @@ long	check_input(int ac, char **av)
 			printf("%ld 1 has died\n", ft_atol(av[2]));
 			return (1);
 		}
+		return (0);
 	}
-	return (0);
+	printf("wrong input\n");
+	return (1);
 }
 
 long	init_data(t_data *data, int ac, char **av)
@@ -50,7 +52,6 @@ long	init_data(t_data *data, int ac, char **av)
 		data->nb_limit_meals = ft_atol(av[5]);
 	else
 		data->nb_limit_meals = 0;
-	data->start_time = get_current_time();
 	data->fork = init_fork(data);
 	data->philo = init_philo(data);
 	data->simulation_running = 1;

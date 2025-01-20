@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/20 12:11:47 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 15:32:45 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ long	create_threads(t_data *data)
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&data->ready_mutex);
 	while (i < data->nb_philo)
 	{
 		if (pthread_create(&data->philo[i].thread_id, NULL, \
@@ -25,8 +26,8 @@ long	create_threads(t_data *data)
 		i++;
 	}
 	usleep(100);
-	pthread_mutex_lock(&data->ready_mutex);
 	data->all_threads_ready = 1;
+	data->start_time = get_current_time();
 	pthread_mutex_unlock(&data->ready_mutex);
 	return (0);
 }
