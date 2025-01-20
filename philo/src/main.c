@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/18 19:51:44 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:11:47 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,17 @@ int	main(int ac, char **av)
 
 	if (init_data(&data, ac, av))
 		return (1);
-	i = 0;
+	i = -1;
 	if (create_threads(&data))
 		return (1);
 	if (pthread_create(&monitor, NULL, monitor_routine, &data) != 0)
 		return (1);
 	pthread_join(monitor, NULL);
-	while (i < data.nb_philo)
-	{
+	while (++i < data.nb_philo)
 		pthread_join(data.philo[i].thread_id, NULL);
-		i++;
-	}
-	i = 0;
-	while (i < data.nb_philo)
-	{
+	i = -1;
+	while (++i < data.nb_philo)
 		pthread_mutex_destroy(&data.fork[i].mutex_id);
-		i++;
-	}
 	pthread_mutex_destroy(&data.sim_mutex);
 	pthread_mutex_destroy(&data.ready_mutex);
 	pthread_mutex_destroy(&data.print_mutex);

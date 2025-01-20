@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:14:29 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/18 20:01:29 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 11:56:18 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,15 @@ long	monitor_full(t_data *data)
 			>= data->nb_limit_meals && long_getter(&data->sim_mutex, \
 			&data->philo[i].status) == 0)
 			{
-				long_setter(&data->sim_mutex, &data->simulation_running, 1);
+				long_setter(&data->sim_mutex, &data->philo[i].status, 1);
 				long_incrementer(&data->sim_mutex, &data->nb_philo_full);
 			}
 			i++;
 		}
-		if (data->nb_philo_full >= data->nb_philo)
+		if (long_getter(&data->sim_mutex, &data->nb_philo_full) >= \
+		data->nb_philo)
 		{
 			long_setter(&data->sim_mutex, &data->simulation_running, 0);
-			//printf("end");
 			usleep(100);
 			return (1);
 		}
@@ -76,6 +76,7 @@ void	*monitor_routine(void *arg)
 			return (NULL);
 		if (monitor_full(data))
 			return (NULL);
+		usleep(100);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/18 20:01:39 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:28:38 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	safe_sleep(long time, t_data *data)
 	long	i;
 
 	i = get_current_time();
-	while ((data->simulation_running))
+	while (long_getter(&data->sim_mutex, &data->simulation_running))
 	{
 		if ((get_current_time() - i) >= time)
 			break ;

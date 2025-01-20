@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/18 19:50:58 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:28:31 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_data
 // initiate data
 long	check_input(int ac, char **av);
 t_philo	*init_philo(t_data *data);
+void	assign_fork(t_data *data, t_philo *philo, int i);
 t_fork	*init_fork(t_data *data);
 long	init_data(t_data *data, int ac, char **av);
 

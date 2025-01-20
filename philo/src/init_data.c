@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/18 19:50:50 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/20 12:09:43 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ long	init_data(t_data *data, int ac, char **av)
 	data->time_to_sleep = ft_atol(av[4]);
 	if (ac == 6)
 		data->nb_limit_meals = ft_atol(av[5]);
+	else
+		data->nb_limit_meals = 0;
 	data->start_time = get_current_time();
 	data->fork = init_fork(data);
 	data->philo = init_philo(data);
@@ -61,6 +63,20 @@ long	init_data(t_data *data, int ac, char **av)
 	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
 		return (1);
 	return (0);
+}
+
+void	assign_fork(t_data *data, t_philo *philo, int i)
+{
+	if (i % 2 == 0)
+	{
+		philo[i].first_fork = &data->fork[i];
+		philo[i].sec_fork = &data->fork[(i + 1) % data->nb_philo];
+	}
+	else
+	{
+		philo[i].first_fork = &data->fork[(i + 1) % data->nb_philo];
+		philo[i].sec_fork = &data->fork[i];
+	}
 }
 
 t_philo	*init_philo(t_data *data)
@@ -79,16 +95,7 @@ t_philo	*init_philo(t_data *data)
 		philo[i].last_eat_time = get_current_time();
 		philo[i].data = data;
 		philo[i].status = 0;
-		if (i % 2 == 0)
-		{
-			philo[i].first_fork = &data->fork[i];
-			philo[i].sec_fork = &data->fork[(i + 1) % data->nb_philo];
-		}
-		else
-		{
-			philo[i].first_fork = &data->fork[(i + 1) % data->nb_philo];
-			philo[i].sec_fork = &data->fork[i];
-		}
+		assign_fork(data, philo, i);
 	}
 	return (philo);
 }
