@@ -6,15 +6,17 @@
 #    By: kyang <kyang@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 11:25:43 by kyang             #+#    #+#              #
-#    Updated: 2025/01/22 16:08:19 by kyang            ###   ########.fr        #
+#    Updated: 2025/01/22 17:52:14 by kyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME = philo_bonus
 
 CC = cc
 
-SRC_PATH = src/
+INCLUDE_PATH = include_bonus
+
+SRC_PATH = src_bonus/
 SRC		=	utils.c \
 			init_data.c \
 			dinner_thread.c \
@@ -34,7 +36,7 @@ $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 	
 %.o: %.c
-	$(CC) $(CFLAGS) -Iinclude -O3 -c $< -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -O3 -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
