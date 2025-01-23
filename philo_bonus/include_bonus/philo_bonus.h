@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/22 17:43:24 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/23 17:29:12 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include <sys/stat.h>
+# include <signal.h>
 
 typedef struct s_data	t_data;
 
@@ -49,14 +50,18 @@ typedef struct s_data
 	long			time_to_sleep;
 	long			nb_limit_meals;
 	long			start_time;
-	sem_t			sem_simulation;
+	sem_t			*sem_simulation;
 	long			simulation_running;
 	long			nb_philo_full;
-	sem_t			sem_ready;
-	sem_t			sem_print;
+	sem_t			*sem_ready;
+	sem_t			*sem_print;
 	long			all_threads_ready;
-	sem_t			sem_fork;
+	sem_t			*sem_fork;
+	sem_t			*sem_full_philo;
 	t_philo			*philo;
+	long			*nb_meals_eaten;
+	long			*last_eat_time;
+	long			*status;
 }	t_data;
 
 // initiate data
@@ -65,17 +70,17 @@ t_philo	*init_philo(t_data *data);
 long	init_data(t_data *data, int ac, char **av);
 
 // dinner thread
-long	create_threads(t_data *data);
-void	wait_all_threads(t_philo *philo);
-long	eat(t_philo *philo);
+long	create_processes(t_data *data);
+void	wait_all_processes(t_philo *philo);
+long	eat(t_philo *philo, int i);
 long	sleep_and_think(t_philo *philo);
-void	*dinner_routine(void *arg);
+void	*dinner_routine(t_philo	*philo, int i);
 long	death_check(t_philo *philo);
 
 // monitor thread
 long	monitor_death(t_data *data);
 long	monitor_full(t_data *data);
-void	*monitor_routine(void *arg);
+void	*monitor_routine(t_data	*data);
 
 // helper
 long	ft_atol(const char *str);

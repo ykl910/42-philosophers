@@ -6,11 +6,11 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 15:52:09 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/22 17:39:05 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/23 10:35:36 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 void	long_setter(sem_t *semaphore, long *dest, long value)
 {

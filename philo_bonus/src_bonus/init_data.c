@@ -6,11 +6,11 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/22 17:47:57 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/23 17:29:34 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 long	check_input(int ac, char **av)
 {
@@ -42,6 +42,8 @@ long	check_input(int ac, char **av)
 
 long	init_data(t_data *data, int ac, char **av)
 {
+	int	i;
+	
 	if (check_input(ac, av))
 		return (1);
 	data->nb_philo = ft_atol(av[1]);
@@ -52,26 +54,45 @@ long	init_data(t_data *data, int ac, char **av)
 		data->nb_limit_meals = ft_atol(av[5]);
 	else
 		data->nb_limit_meals = 0;
-	data->sem_fork = *sem_open("/sem_fork", O_CREAT, 0644, ft_atol(av[1]));
-	if (&data->sem_fork == SEM_FAILED) {
-        exit(EXIT_FAILURE);
-    }
-	data->philo = init_philo(data);
 	data->simulation_running = 1;
 	data->all_threads_ready = 0;
 	data->nb_philo_full = 0;
-	data->sem_simulation = *sem_open("/sem_simulation", O_CREAT, 0644, 1);
-	if (&data->sem_simulation == SEM_FAILED) {
+	data->last_eat_time = malloc(sizeof(long) * ft_atol(av[1]));
+	data->nb_meals_eaten = malloc(sizeof(long) * ft_atol(av[1]));
+	data->status = malloc(sizeof(long) * ft_atol(av[1]));
+	if (!data->last_eat_time || !data->nb_meals_eaten || !data->status)
+		exit(EXIT_FAILURE);
+	i = -1;
+	while (++i < ft_atol(av[1]))
+	{
+		data->last_eat_time[i] = get_current_time();
+		data->nb_meals_eaten[i] = 0;
+		data->status[i] = 0;
+	}
+	sem_close(data->sem_fork);
+	sem_unlink("/sem_fork");
+	sem_close(data->sem_simulation);
+	sem_unlink("/sem_simulation"); 
+	sem_close(data->sem_ready);
+	sem_unlink("/sem_ready"); 
+	sem_close(data->sem_print);
+	sem_unlink("/sem_print"); 
+	data->sem_fork = sem_open("/sem_fork", O_CREAT, 0644, 5);
+	if (data->sem_fork == SEM_FAILED)
         exit(EXIT_FAILURE);
-    }
-	data->sem_ready = *sem_open("/sem_ready", O_CREAT, 0644, 1);
-	if (&data->sem_ready == SEM_FAILED) {
+	data->sem_full_philo = sem_open("/sem_full_philo", O_CREAT, 0644, 0);
+	if (data->sem_fork == SEM_FAILED)
         exit(EXIT_FAILURE);
-    }
-	data->sem_print = *sem_open("/sem_print", O_CREAT, 0644, 1);
-	if (&data->sem_print == SEM_FAILED) {
+	data->sem_simulation = sem_open("/sem_simulation", O_CREAT, 0644, 1);
+	if (data->sem_simulation == SEM_FAILED)
         exit(EXIT_FAILURE);
-    }
+	data->sem_ready = sem_open("/sem_ready", O_CREAT, 0644, 0);
+	if (data->sem_ready == SEM_FAILED)
+        exit(EXIT_FAILURE);
+	data->sem_print = sem_open("/sem_print", O_CREAT, 0644, 10);
+	if (data->sem_print == SEM_FAILED)
+        exit(EXIT_FAILURE);
+	data->philo = init_philo(data);
 	return (0);
 }
 
@@ -91,9 +112,6 @@ t_philo	*init_philo(t_data *data)
 		philo[i].last_eat_time = get_current_time();
 		philo[i].data = data;
 		philo[i].status = 0;
-        // philo[i].pid = fork();
-        // if (philo[i].pid < 0)
-        //     exit(EXIT_FAILURE);
     }
 	return (philo);
 }

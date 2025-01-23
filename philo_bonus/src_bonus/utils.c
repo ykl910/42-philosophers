@@ -6,11 +6,11 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/22 17:39:17 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/23 10:44:48 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 long	ft_atol(const char *str)
 {
@@ -52,13 +52,13 @@ long	get_current_time(void)
 
 void	safe_print(t_philo *philo, char *string)
 {
-	sem_wait(&(philo->data->sem_print));
-	if (long_getter(&philo->data->sem_simulation, &philo->data->simulation_running))
+	sem_wait(philo->data->sem_print);
+	if (long_getter(philo->data->sem_simulation, &philo->data->simulation_running))
 	{
 		printf("%ld %i %s\n", get_current_time() - \
 		philo->data->start_time, philo->philo_id, string);
 	}
-	sem_post(&(philo->data->sem_print));
+	sem_post(philo->data->sem_print);
 	return ;
 }
 
@@ -67,7 +67,7 @@ void	safe_sleep(long time, t_data *data)
 	long	i;
 
 	i = get_current_time();
-	while (long_getter(&data->sem_simulation, &data->simulation_running))
+	while (long_getter(data->sem_simulation, &data->simulation_running))
 	{
 		if ((get_current_time() - i) >= time)
 			break ;
