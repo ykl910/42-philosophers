@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/23 10:44:48 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/24 19:22:40 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,14 @@ long	get_current_time(void)
 	return (milliseconds);
 }
 
-void	safe_print(t_philo *philo, char *string)
+void	safe_print(t_philo *philo, t_data *data, char *string)
 {
-	sem_wait(philo->data->sem_print);
-	if (long_getter(philo->data->sem_simulation, &philo->data->simulation_running))
-	{
-		printf("%ld %i %s\n", get_current_time() - \
-		philo->data->start_time, philo->philo_id, string);
-	}
-	sem_post(philo->data->sem_print);
+	sem_wait(data->sem_print);
+	sem_wait(data->sem_simulation);
+	printf("%ld %i %s\n", get_current_time() - \
+	philo->data->start_time, philo->philo_id, string);
+	sem_post(data->sem_simulation);
+	sem_post(data->sem_print);
 	return ;
 }
 
@@ -67,10 +66,27 @@ void	safe_sleep(long time, t_data *data)
 	long	i;
 
 	i = get_current_time();
-	while (long_getter(data->sem_simulation, &data->simulation_running))
+	while ((get_current_time() - i) < time)
 	{
-		if ((get_current_time() - i) >= time)
-			break ;
+		sem_wait(data->sem_simulation);
+		sem_post(data->sem_simulation);
 		usleep(50);
 	}
+}
+
+void	cleanup_data(t_data *data)
+{
+	sem_close(data->sem_fork);
+	sem_close(data->sem_end);
+	sem_close(data->sem_full_philo);
+	sem_close(data->sem_simulation);
+	sem_close(data->sem_ready);
+	sem_close(data->sem_print);
+	sem_unlink("/sem_fork");
+	sem_unlink("/sem_end");
+	sem_unlink("/sem_full_philo");
+	sem_unlink("/sem_simulation");
+	sem_unlink("/sem_ready");
+	sem_unlink("/sem_print");
+	free(data->philo);
 }

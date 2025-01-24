@@ -6,7 +6,7 @@
 #    By: kyang <kyang@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 11:25:43 by kyang             #+#    #+#              #
-#    Updated: 2025/01/22 17:52:14 by kyang            ###   ########.fr        #
+#    Updated: 2025/01/24 18:57:25 by kyang            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,8 @@ INCLUDE_PATH = include_bonus
 SRC_PATH = src_bonus/
 SRC		=	utils.c \
 			init_data.c \
-			dinner_thread.c \
-			monitor_thread.c \
+			dinner_process.c \
+			monitor_process.c \
 			getters_setters.c \
 			main.c
 

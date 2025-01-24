@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/23 17:29:12 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/24 19:22:47 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,35 +51,33 @@ typedef struct s_data
 	long			nb_limit_meals;
 	long			start_time;
 	sem_t			*sem_simulation;
-	long			simulation_running;
+	sem_t			*sem_end;
 	long			nb_philo_full;
 	sem_t			*sem_ready;
 	sem_t			*sem_print;
-	long			all_threads_ready;
 	sem_t			*sem_fork;
 	sem_t			*sem_full_philo;
 	t_philo			*philo;
-	long			*nb_meals_eaten;
-	long			*last_eat_time;
-	long			*status;
 }	t_data;
 
 // initiate data
 long	check_input(int ac, char **av);
+void	init_semaphore(t_data *data, char **av);
 t_philo	*init_philo(t_data *data);
 long	init_data(t_data *data, int ac, char **av);
 
 // dinner thread
-long	create_processes(t_data *data);
-void	wait_all_processes(t_philo *philo);
-long	eat(t_philo *philo, int i);
-long	sleep_and_think(t_philo *philo);
-void	*dinner_routine(t_philo	*philo, int i);
-long	death_check(t_philo *philo);
+void	create_processes(t_data *data);
+void	run_processes(t_data *data);
+long	eat(t_philo *philo, int i, t_data *data);
+long	sleep_and_think(t_philo *philo, t_data *data);
+void	*dinner_routine(t_philo	*philo, t_data *data, int i);
 
 // monitor thread
-long	monitor_death(t_data *data);
-long	monitor_full(t_data *data);
+long	monitor_philo_death(t_philo *philo, t_data *data, int i);
+void	monitor_philo_full(t_philo *philo, t_data *data);
+void	*monitor_death_routine(void *arg);
+void	*monitor_full_routine(void *arg);
 void	*monitor_routine(t_data	*data);
 
 // helper
@@ -88,7 +86,8 @@ long	get_current_time(void);
 void	long_setter(sem_t *mutex, long *dest, long value);
 long	long_getter(sem_t *mutex, long *src);
 void	long_incrementer(sem_t *mutex, long *dest);
-void	safe_print(t_philo *philo, char *string);
+void	safe_print(t_philo *philo, t_data *data, char *string);
 void	safe_sleep(long time, t_data *data);
+void	cleanup_data(t_data *data);
 
 #endif
