@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 19:22:40 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 14:16:44 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,13 @@ long	get_current_time(void)
 
 void	safe_print(t_philo *philo, t_data *data, char *string)
 {
-	sem_wait(data->sem_print);
-	sem_wait(data->sem_simulation);
+	data->nb_limit_meals = 5;
+	sem_wait(philo->data->sem_print);
+	sem_wait(philo->data->sem_simulation);
 	printf("%ld %i %s\n", get_current_time() - \
 	philo->data->start_time, philo->philo_id, string);
-	sem_post(data->sem_simulation);
-	sem_post(data->sem_print);
+	sem_post(philo->data->sem_simulation);
+	sem_post(philo->data->sem_print);
 	return ;
 }
 

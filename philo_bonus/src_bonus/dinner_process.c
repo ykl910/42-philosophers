@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:07:47 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 18:57:15 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 14:15:35 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ long	monitor_philo_death(t_philo *philo, t_data *data, int i)
 	long_getter(philo->data->sem_simulation, &philo->last_eat_time)))
 	{
 		safe_print(philo, data, "died");
-		sem_wait(data->sem_simulation);
+		sem_wait(philo->data->sem_simulation);
 		sem_post(philo->data->sem_end);
 		return (0);
 	}
@@ -28,14 +28,15 @@ long	monitor_philo_death(t_philo *philo, t_data *data, int i)
 
 void	monitor_philo_full(t_philo *philo, t_data *data)
 {
-	if (data->nb_limit_meals)
+	data->nb_limit_meals = 10;
+	if (philo->data->nb_limit_meals)
 	{
-		if (long_getter(data->sem_simulation, &philo->nb_meals_eaten) == \
-		long_getter(data->sem_simulation, &philo->data->nb_limit_meals) && \
-		long_getter(data->sem_simulation, &philo->status) == 0)
+		if (long_getter(philo->data->sem_simulation, &philo->nb_meals_eaten) == \
+		long_getter(philo->data->sem_simulation, &philo->data->nb_limit_meals) && \
+		long_getter(philo->data->sem_simulation, &philo->status) == 0)
 		{
 			long_setter(philo->data->sem_simulation, &philo->status, 1);
-			sem_post(data->sem_full_philo);
+			sem_post(philo->data->sem_full_philo);
 		}
 	}
 }
