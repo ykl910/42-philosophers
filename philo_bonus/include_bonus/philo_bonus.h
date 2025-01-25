@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 15:10:50 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 23:54:22 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,24 @@ typedef struct s_data
 	long			nb_limit_meals;
 	long			start_time;
 	sem_t			*sem_simulation;
-	sem_t			*sem_end;
+	long			process_killed;
+	sem_t			*sem_died;
 	long			nb_philo_full;
 	sem_t			*sem_ready;
+	sem_t			*sem_meals;
 	sem_t			*sem_print;
 	sem_t			*sem_fork;
+	sem_t			*sem_sleep;
 	sem_t			*sem_full_philo;
+	sem_t			*sem_kill;
+	sem_t			*sem_end;
 	t_philo			*philo;
 }	t_data;
 
 // initiate data
 long	check_input(int ac, char **av);
-void	init_semaphore(t_data *data, char **av);
+void	init_semaphore_one(t_data *data, char **av);
+void	init_semaphore_two(t_data *data);
 t_philo	*init_philo(t_data *data);
 long	init_data(t_data *data, int ac, char **av);
 
@@ -70,10 +76,10 @@ void	*dinner_routine(t_philo	*philo);
 
 // monitor thread
 long	monitor_philo_death(t_philo *philo);
-void	monitor_philo_full(t_philo *philo);
+long	monitor_philo_full(t_philo *philo);
 void	*monitor_death_routine(void *arg);
 void	*monitor_full_routine(void *arg);
-void	*monitor_routine(t_data	*data);
+void	monitor_routine(t_data	*data);
 
 // helper
 long	ft_atol(const char *str);

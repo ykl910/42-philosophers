@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 19:27:09 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 23:54:18 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ long	init_data(t_data *data, int ac, char **av)
 	else
 		data->nb_limit_meals = 0;
 	data->nb_philo_full = 0;
-	init_semaphore(data, av);
+	data->process_killed = 0;
+	init_semaphore_one(data, av);
+	init_semaphore_two(data);
 	data->philo = init_philo(data);
 	return (0);
 }
@@ -58,19 +60,18 @@ long	check_input(int ac, char **av)
 	return (1);
 }
 
-void	init_semaphore(t_data *data, char **av)
+void	init_semaphore_one(t_data *data, char **av)
 {
 	sem_unlink("/sem_fork");
-	sem_unlink("/sem_end");
+	sem_unlink("/sem_died");
 	sem_unlink("/sem_full_philo");
 	sem_unlink("/sem_simulation");
 	sem_unlink("/sem_ready");
-	sem_unlink("/sem_print");
 	data->sem_fork = sem_open("/sem_fork", O_CREAT, 0644, ft_atol(av[1]));
 	if (data->sem_fork == SEM_FAILED)
 		exit(EXIT_FAILURE);
-	data->sem_end = sem_open("/sem_end", O_CREAT, 0644, 0);
-	if (data->sem_end == SEM_FAILED)
+	data->sem_died = sem_open("/sem_died", O_CREAT, 0644, 0);
+	if (data->sem_died == SEM_FAILED)
 		exit(EXIT_FAILURE);
 	data->sem_full_philo = sem_open("/sem_full_philo", O_CREAT, 0644, 0);
 	if (data->sem_full_philo == SEM_FAILED)
@@ -81,8 +82,29 @@ void	init_semaphore(t_data *data, char **av)
 	data->sem_ready = sem_open("/sem_ready", O_CREAT, 0644, 0);
 	if (data->sem_ready == SEM_FAILED)
 		exit(EXIT_FAILURE);
+}
+
+void	init_semaphore_two(t_data *data)
+{
+	sem_unlink("/sem_print");
+	sem_unlink("/sem_meals");
+	sem_unlink("/sem_sleep");
+	sem_unlink("/sem_kill");
+	sem_unlink("/sem_end");
 	data->sem_print = sem_open("/sem_print", O_CREAT, 0644, 1);
 	if (data->sem_print == SEM_FAILED)
+		exit(EXIT_FAILURE);
+	data->sem_meals = sem_open("/sem_meals", O_CREAT, 0644, 1);
+	if (data->sem_meals == SEM_FAILED)
+		exit(EXIT_FAILURE);
+	data->sem_sleep = sem_open("/sem_sleep", O_CREAT, 0644, 1);
+	if (data->sem_sleep == SEM_FAILED)
+		exit(EXIT_FAILURE);
+	data->sem_kill = sem_open("/sem_kill", O_CREAT, 0644, 0);
+	if (data->sem_kill == SEM_FAILED)
+		exit(EXIT_FAILURE);
+	data->sem_end = sem_open("/sem_end", O_CREAT, 0644, 0);
+	if (data->sem_end == SEM_FAILED)
 		exit(EXIT_FAILURE);
 }
 
