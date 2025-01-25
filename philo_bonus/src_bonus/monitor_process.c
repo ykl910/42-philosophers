@@ -6,41 +6,11 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 13:14:29 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 18:59:51 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:22:37 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-// void	*monitor_death_routine(void *arg)
-// {
-// 	t_data *data = (t_data *)arg;
-// 	int	i;
-// 	int	j;
-
-// 	while (1)
-// 	{
-// 		i = -1;
-// 		while (++i < data->nb_philo)
-// 		{
-// 			if ((data->time_to_die < get_current_time() - \
-// 				long_getter(data->sem_simulation, &data->philo[i].last_eat_time)))
-// 			{
-// 				safe_print(&data->philo[i], data, "died");
-// 				sem_wait(data->sem_simulation);
-// 				j = -1;
-// 				while (++j < data->nb_philo)
-// 				{
-// 					if (kill(data->philo[j].pid, SIGKILL) == -1)
-// 						exit(EXIT_FAILURE);
-// 				}
-// 				exit(EXIT_SUCCESS);
-// 				return (0);
-// 			}
-// 		}
-// 	}
-// 	return (NULL);
-// }
 
 void	*monitor_death_routine(void *arg)
 {
@@ -56,7 +26,7 @@ void	*monitor_death_routine(void *arg)
 			exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
-	sem_wait(data->sem_simulation);
+	//sem_wait(data->sem_simulation);
 	return (NULL);
 }
 
@@ -77,7 +47,7 @@ void	*monitor_full_routine(void *arg)
 			exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
-	sem_wait(data->sem_simulation);
+	//sem_wait(data->sem_simulation);
 	return (NULL);
 }
 

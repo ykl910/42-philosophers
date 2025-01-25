@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 19:34:46 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:09:52 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	create_processes(t_data *data)
 			sem_wait(data->sem_ready);
 			data->philo[i].data->start_time = get_current_time();
 			data->philo[i].last_eat_time = get_current_time();
-			dinner_routine(&data->philo[i], data, i);
+			dinner_routine(&data->philo[i]);
 			exit(EXIT_SUCCESS);
 		}
 	}

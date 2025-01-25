@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/24 19:22:47 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/25 15:10:50 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,9 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <signal.h>
+# include <sys/wait.h>
 
 typedef struct s_data	t_data;
-
-typedef struct s_fork
-{
-	pthread_mutex_t	mutex_id;
-	int				fork_id;
-}	t_fork;
 
 typedef struct s_philo
 {
@@ -69,13 +64,13 @@ long	init_data(t_data *data, int ac, char **av);
 // dinner thread
 void	create_processes(t_data *data);
 void	run_processes(t_data *data);
-long	eat(t_philo *philo, int i, t_data *data);
-long	sleep_and_think(t_philo *philo, t_data *data);
-void	*dinner_routine(t_philo	*philo, t_data *data, int i);
+long	eat(t_philo *philo);
+long	sleep_and_think(t_philo *philo);
+void	*dinner_routine(t_philo	*philo);
 
 // monitor thread
-long	monitor_philo_death(t_philo *philo, t_data *data, int i);
-void	monitor_philo_full(t_philo *philo, t_data *data);
+long	monitor_philo_death(t_philo *philo);
+void	monitor_philo_full(t_philo *philo);
 void	*monitor_death_routine(void *arg);
 void	*monitor_full_routine(void *arg);
 void	*monitor_routine(t_data	*data);
@@ -83,10 +78,10 @@ void	*monitor_routine(t_data	*data);
 // helper
 long	ft_atol(const char *str);
 long	get_current_time(void);
-void	long_setter(sem_t *mutex, long *dest, long value);
-long	long_getter(sem_t *mutex, long *src);
-void	long_incrementer(sem_t *mutex, long *dest);
-void	safe_print(t_philo *philo, t_data *data, char *string);
+void	long_setter(sem_t *semaphore, long *dest, long value);
+long	long_getter(sem_t *semaphore, long *src);
+void	long_incrementer(sem_t *semaphore, long *dest);
+void	safe_print(t_philo *philo, char *string);
 void	safe_sleep(long time, t_data *data);
 void	cleanup_data(t_data *data);
 
