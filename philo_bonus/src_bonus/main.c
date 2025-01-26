@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 23:18:14 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/26 10:04:52 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	run_processes(t_data *data)
 	j = -1;
 	while (++j < data->nb_philo)
 		sem_post(data->sem_ready);
-	usleep(500);
+	usleep(50);
 	monitor_routine(data);
 	sem_wait(data->sem_kill);
 	j = -1;
@@ -49,6 +49,7 @@ void	run_processes(t_data *data)
 	{
 		if (kill(data->philo[j].pid, SIGKILL) == -1)
 			exit(EXIT_FAILURE);
+		printf("killed");
 		waitpid(data->philo[j].pid, NULL, 0);
 	}
 	cleanup_data(data);

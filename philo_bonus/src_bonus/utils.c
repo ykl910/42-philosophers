@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:27:12 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 23:53:31 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/26 10:38:00 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	safe_sleep(long time, t_data *data)
 void	cleanup_data(t_data *data)
 {
 	sem_close(data->sem_fork);
+	sem_close(data->sem_max_fork);
 	sem_close(data->sem_end);
 	sem_close(data->sem_full_philo);
 	sem_close(data->sem_simulation);
@@ -87,6 +88,7 @@ void	cleanup_data(t_data *data)
 	sem_close(data->sem_kill);
 	sem_close(data->sem_died);
 	sem_unlink("/sem_fork");
+	sem_unlink("/sem_max_fork");
 	sem_unlink("/sem_end");
 	sem_unlink("/sem_full_philo");
 	sem_unlink("/sem_simulation");

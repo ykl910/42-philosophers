@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 17:46:08 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 23:54:22 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/26 10:44:05 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_data
 	sem_t			*sem_meals;
 	sem_t			*sem_print;
 	sem_t			*sem_fork;
+	sem_t			*sem_max_fork;
 	sem_t			*sem_sleep;
 	sem_t			*sem_full_philo;
 	sem_t			*sem_kill;

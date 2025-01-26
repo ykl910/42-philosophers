@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 11:50:00 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 23:54:18 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/26 10:45:18 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,16 @@ long	check_input(int ac, char **av)
 void	init_semaphore_one(t_data *data, char **av)
 {
 	sem_unlink("/sem_fork");
+	sem_unlink("/sem_max_fork");
 	sem_unlink("/sem_died");
 	sem_unlink("/sem_full_philo");
 	sem_unlink("/sem_simulation");
 	sem_unlink("/sem_ready");
 	data->sem_fork = sem_open("/sem_fork", O_CREAT, 0644, ft_atol(av[1]));
 	if (data->sem_fork == SEM_FAILED)
+		exit(EXIT_FAILURE);
+	data->sem_max_fork = sem_open("/sem_max_fork", O_CREAT, 0644, ft_atol(av[1])/2);
+	if (data->sem_max_fork == SEM_FAILED)
 		exit(EXIT_FAILURE);
 	data->sem_died = sem_open("/sem_died", O_CREAT, 0644, 0);
 	if (data->sem_died == SEM_FAILED)

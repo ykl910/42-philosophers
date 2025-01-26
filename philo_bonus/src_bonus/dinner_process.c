@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:07:47 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/25 23:49:20 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/26 10:46:13 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ long	monitor_philo_full(t_philo *philo)
 
 long	eat(t_philo *philo)
 {
+	sem_wait(philo->data->sem_max_fork);
 	sem_wait(philo->data->sem_fork);
 	safe_print(philo, "has taken a fork");
 	if (!monitor_philo_death(philo))
@@ -59,6 +60,7 @@ long	eat(t_philo *philo)
 	if (!monitor_philo_death(philo))
 		return (1);
 	safe_print(philo, "is eating");
+	sem_post(philo->data->sem_max_fork);
 	safe_sleep(philo->data->time_to_eat, philo->data);
 	long_incrementer(philo->data->sem_meals, &philo->nb_meals_eaten);
 	if (!monitor_philo_full(philo))
