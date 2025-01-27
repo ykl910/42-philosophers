@@ -6,7 +6,7 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 18:32:23 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/26 10:04:52 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/27 16:57:24 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,9 @@ void	run_processes(t_data *data)
 	sem_post(data->sem_died);
 	long_setter(data->sem_died, &data->process_killed, 1);
 	sem_wait(data->sem_kill);
-	for (int left = 0; left < (data->nb_philo); left++) 
-	{
-    	sem_post(data->sem_full_philo);
-	}
+	j = -1;
+	while (++j < data->nb_philo)
+		sem_post(data->sem_full_philo);
 	sem_post(data->sem_kill);
 	usleep(50);
 	kill_processes(data);

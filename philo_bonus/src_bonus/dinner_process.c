@@ -6,18 +6,18 @@
 /*   By: kyang <kyang@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 14:07:47 by kyang             #+#    #+#             */
-/*   Updated: 2025/01/26 10:46:13 by kyang            ###   ########.fr       */
+/*   Updated: 2025/01/27 16:56:43 by kyang            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void *monitor_death_thread(void *arg) 
+void	*monitor_death_thread(void *arg)
 {
-	t_philo *philo;
-	philo = (t_philo *)arg;
+	t_philo	*philo;
 
-	while (1) 
+	philo = (t_philo *)arg;
+	while (1)
 	{
 		usleep(100);
 		if ((philo->data->time_to_die < get_current_time() - \
@@ -26,10 +26,10 @@ void *monitor_death_thread(void *arg)
 			safe_print(philo, "died");
 			sem_wait(philo->data->sem_simulation);
 			sem_post(philo->data->sem_kill);
-			sem_post(philo->data->sem_died);	
+			sem_post(philo->data->sem_died);
 		}
 	}
-	return NULL;
+	return (NULL);
 }
 
 long	monitor_philo_full(t_philo *philo)
@@ -64,7 +64,6 @@ long	eat(t_philo *philo)
 		return (1);
 	sem_post(philo->data->sem_fork);
 	sem_post(philo->data->sem_fork);
-
 	return (0);
 }
 
