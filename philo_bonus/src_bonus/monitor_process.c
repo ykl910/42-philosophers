@@ -23,7 +23,11 @@ void	*monitor_full_routine(void *arg)
 	{
 		sem_wait(data->sem_full_philo);
 	}
-	//sem_post(data->sem_end);
+	if (data->process_killed == 1)
+	{
+		return (NULL);
+	}
+	sem_post(data->sem_died);
 	sem_post(data->sem_kill);
 	return (NULL);
 }

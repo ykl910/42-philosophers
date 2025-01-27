@@ -34,6 +34,20 @@ void	create_processes(t_data *data)
 	data->start_time = get_current_time();
 }
 
+void	kill_processes(t_data *data)
+{
+	int	j;
+
+	j = -1;
+	sem_wait(data->sem_kill);
+	while (++j < data->nb_philo)
+	{
+		if (kill(data->philo[j].pid, SIGKILL) == -1)
+			exit(EXIT_FAILURE);
+	}
+	sem_post(data->sem_kill);
+}
+
 void	run_processes(t_data *data)
 {
 	int	j;
@@ -43,15 +57,17 @@ void	run_processes(t_data *data)
 		sem_post(data->sem_ready);
 	usleep(50);
 	monitor_routine(data);
+	sem_wait(data->sem_died);
+	sem_post(data->sem_died);
+	long_setter(data->sem_died, &data->process_killed, 1);
 	sem_wait(data->sem_kill);
-	j = -1;
-	while (++j < data->nb_philo)
+	for (int left = 0; left < (data->nb_philo); left++) 
 	{
-		if (kill(data->philo[j].pid, SIGKILL) == -1)
-			exit(EXIT_FAILURE);
-		printf("killed");
-		waitpid(data->philo[j].pid, NULL, 0);
+    	sem_post(data->sem_full_philo);
 	}
+	sem_post(data->sem_kill);
+	usleep(50);
+	kill_processes(data);
 	cleanup_data(data);
 }
 

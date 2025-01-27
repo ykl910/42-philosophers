@@ -33,7 +33,7 @@ OBJS = $(SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) -pthread -lrt
 	
 %.o: %.c
 	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -O3 -c $< -o $@

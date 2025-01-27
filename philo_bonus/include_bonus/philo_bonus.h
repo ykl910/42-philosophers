@@ -76,9 +76,8 @@ long	sleep_and_think(t_philo *philo);
 void	*dinner_routine(t_philo	*philo);
 
 // monitor thread
-long	monitor_philo_death(t_philo *philo);
 long	monitor_philo_full(t_philo *philo);
-void	*monitor_death_routine(void *arg);
+void	*monitor_death_thread(void *arg);
 void	*monitor_full_routine(void *arg);
 void	monitor_routine(t_data	*data);
 
@@ -91,5 +90,6 @@ void	long_incrementer(sem_t *semaphore, long *dest);
 void	safe_print(t_philo *philo, char *string);
 void	safe_sleep(long time, t_data *data);
 void	cleanup_data(t_data *data);
+void	kill_processes(t_data *data);
 
 #endif

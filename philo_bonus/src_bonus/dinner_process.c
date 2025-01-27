@@ -12,25 +12,28 @@
 
 #include "philo_bonus.h"
 
-long	monitor_philo_death(t_philo *philo)
+void *monitor_death_thread(void *arg) 
 {
-	if ((philo->data->time_to_die < get_current_time() - \
-	long_getter(philo->data->sem_simulation, &philo->last_eat_time)))
+	t_philo *philo;
+	philo = (t_philo *)arg;
+
+	while (1) 
 	{
-		safe_print(philo, "died");
-		sem_wait(philo->data->sem_simulation);
-		sem_post(philo->data->sem_died);
-		sem_post(philo->data->sem_kill);
-		return (0);
+		usleep(100);
+		if ((philo->data->time_to_die < get_current_time() - \
+		long_getter(philo->data->sem_simulation, &philo->last_eat_time)))
+		{
+			safe_print(philo, "died");
+			sem_wait(philo->data->sem_simulation);
+			sem_post(philo->data->sem_kill);
+			sem_post(philo->data->sem_died);	
+		}
 	}
-	return (1);
+	return NULL;
 }
 
 long	monitor_philo_full(t_philo *philo)
 {
-	int	i;
-
-	i = 0;
 	if (philo->data->nb_limit_meals)
 	{
 		if (long_getter(philo->data->sem_simulation, &philo->nb_meals_eaten) == \
@@ -49,16 +52,10 @@ long	eat(t_philo *philo)
 	sem_wait(philo->data->sem_max_fork);
 	sem_wait(philo->data->sem_fork);
 	safe_print(philo, "has taken a fork");
-	if (!monitor_philo_death(philo))
-		return (1);
 	sem_wait(philo->data->sem_fork);
-	if (!monitor_philo_death(philo))
-		return (1);
 	safe_print(philo, "has taken a fork");
 	long_setter(philo->data->sem_simulation, &philo->last_eat_time, \
 	get_current_time());
-	if (!monitor_philo_death(philo))
-		return (1);
 	safe_print(philo, "is eating");
 	sem_post(philo->data->sem_max_fork);
 	safe_sleep(philo->data->time_to_eat, philo->data);
@@ -67,6 +64,7 @@ long	eat(t_philo *philo)
 		return (1);
 	sem_post(philo->data->sem_fork);
 	sem_post(philo->data->sem_fork);
+
 	return (0);
 }
 
@@ -83,16 +81,16 @@ long	sleep_and_think(t_philo *philo)
 
 void	*dinner_routine(t_philo	*philo)
 {
+	pthread_t	philo_thread;
+
 	if (philo->philo_id % 2 == 0)
 		usleep(100);
+	pthread_create(&philo_thread, NULL, monitor_death_thread, philo);
+	pthread_detach(philo_thread);
 	while (1)
 	{	
-		if (!monitor_philo_death(philo))
-			break ;
 		if (eat(philo))
 			return (NULL);
-		if (!monitor_philo_death(philo))
-			break ;
 		if (sleep_and_think(philo))
 			return (NULL);
 	}
