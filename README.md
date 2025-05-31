@@ -19,7 +19,14 @@ The project has two parts:
 - Correct handling of timing ⏱️, synchronization, and termination conditions.  
 - Optional argument to specify the number of times each philosopher must eat 🍽️.
 
-## Usage 🚀
+## How to Compile 🛠️
+
+```bash
+make
+```
+
+## How to Run 🚀
 
 ```bash
 ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+```
